@@ -1,0 +1,39 @@
+@startuml TimeTracker
+hide circle
+skinparam Linetype ortho
+
+entity User {
+    *id: String <<UUID>>
+    ---
+    *username: String
+    *password: String
+    *salt: String
+}
+
+entity Activity {    
+    *id: String <<UUID>>
+    *categoryId: String <<Foreign UUID>>
+    *userId: String <<Foreign UUID>>
+    ---
+    *name: String
+}
+
+entity Record {
+    *id: String <<UUID>>
+    *activity: String <<Foreign UUID>>
+    ---
+    *startedAt: DateTime
+    endedAt: DateTime
+    deleted: bool
+}
+
+entity Category {
+    *id: String <<UUID>>
+    ---
+    *name: String
+}
+
+User ||..o{ Activity
+Category ||..o{ Activity
+Activity ||..o{ Record 
+@enduml
