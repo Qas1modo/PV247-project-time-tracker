@@ -3,7 +3,7 @@ hide circle
 skinparam Linetype ortho
 
 entity User {
-    *id: String <<UUID>>
+    *id: Int
     ---
     *username: String
     *password: String
@@ -11,7 +11,7 @@ entity User {
 }
 
 entity Activity {    
-    *id: String <<UUID>>
+    *id: Int
     *categoryId: String <<Foreign UUID>>
     *userId: String <<Foreign UUID>>
     ---
@@ -19,8 +19,8 @@ entity Activity {
 }
 
 entity Record {
-    *id: String <<UUID>>
-    *activity: String <<Foreign UUID>>
+    *id: Int
+    *activityId: Int
     ---
     *startedAt: DateTime
     endedAt: DateTime
