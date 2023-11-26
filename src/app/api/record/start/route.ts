@@ -3,7 +3,7 @@ import { object, ValidationError, number } from "yup";
 import { getServerAuthSession } from "@/server/auth";
 
 const startSchenma = object({
-  activityId: number().required()
+  activityId: number().required(),
 });
 
 export const POST = async (req: Request) => {

@@ -89,7 +89,7 @@ export const startRecord = async (data: {
   activityId: number;
   userId: number;
 }) => {
-  if (await getActivityById({ id: data.activityId, userId: data.userId})) {
+  if (await getActivityById({ id: data.activityId, userId: data.userId })) {
     return;
   }
   const record = db.record.create({

@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 
-export const getActivityById = async (data: { id: number, userId: number }) => {
+export const getActivityById = async (data: { id: number; userId: number }) => {
   const activity = await db.activity.findFirst({
     where: { id: data.id, userId: data.userId, deleted: false },
   });

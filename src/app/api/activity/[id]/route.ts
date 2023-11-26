@@ -22,8 +22,7 @@ export const GET = async (
   let data = null;
   try {
     data = await getActivityById({ id: params.id, userId: status.user.id });
-  }
-  catch (e) {
+  } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       return new Response(JSON.stringify(e.cause), {
         status: 400,
@@ -38,7 +37,7 @@ export const GET = async (
   if (data === null) {
     return new Response(JSON.stringify(data), {
       status: 400,
-      statusText: "Unable to find this activity for current user"
+      statusText: "Unable to find this activity for current user",
     });
   }
   return new Response(JSON.stringify(data), {
