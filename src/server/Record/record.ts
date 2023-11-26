@@ -1,102 +1,136 @@
-import { db } from '@/server/db';
-import { getActivityById } from '../Activity/activity';
+import { db } from "@/server/db";
+import { getActivityById } from "../Activity/activity";
 
 export const getRecordById = async (data: { id: number }) => {
-    const record = await db.record.findFirst({ where: { id: data.id, 
-        deleted: false, activity: {
-            deleted: false
-        } }, select: {
-            activity: {
-                include: {
-                    category: {
-                        select: {
-                            name: true
-                        }
-                    }
-                }
+  const record = await db.record.findFirst({
+    where: {
+      id: data.id,
+      deleted: false,
+      activity: {
+        deleted: false,
+      },
+    },
+    select: {
+      activity: {
+        include: {
+          category: {
+            select: {
+              name: true,
             },
-        }});
-    return record;
+          },
+        },
+      },
+    },
+  });
+  return record;
 };
 
 export const getUserRecords = async (data: { userId: number }) => {
-    const records = await db.activity.findMany({where: {
-        userId: data.userId, deleted: false
-    }, select: {
-        name: true,
-        records: {
-            where: {
-                deleted: false
-            }
-        }
-    }});
-    return records;
+  const records = await db.activity.findMany({
+    where: {
+      userId: data.userId,
+      deleted: false,
+    },
+    select: {
+      name: true,
+      records: {
+        where: {
+          deleted: false,
+        },
+      },
+    },
+  });
+  return records;
 };
 
 export const getUserDoneRecords = async (data: { userId: number }) => {
-    const records = await db.activity.findMany({where: {
-        userId: data.userId,
-        deleted: false
-    }, select: {
-        name: true,
-        records: {
-            where: {NOT: [
-                {
-                    endedAt: null
-                }
-            ],
-            deleted: false
-        }
-    }
-    }});
-    return records;
+  const records = await db.activity.findMany({
+    where: {
+      userId: data.userId,
+      deleted: false,
+    },
+    select: {
+      name: true,
+      records: {
+        where: {
+          NOT: [
+            {
+              endedAt: null,
+            },
+          ],
+          deleted: false,
+        },
+      },
+    },
+  });
+  return records;
 };
 
 export const getUserProgressRecords = async (data: { userId: number }) => {
-    const records = await db.activity.findMany({where: {
+  const records = await db.activity.findMany({
+    where: {
+      userId: data.userId,
+    },
+    select: {
+      name: true,
+      records: {
+        where: {
+          endedAt: null,
+          deleted: false,
+        },
+      },
+    },
+  });
+  return records;
+};
+
+export const startRecord = async (data: {
+  activityId: number;
+  userId: number;
+}) => {
+  if ((await getActivityById({ id: data.activityId }))?.userId != data.userId) {
+    return;
+  }
+  const record = db.record.create({
+    data: {
+      activityId: data.activityId,
+    },
+  });
+  return record;
+};
+
+export const finishRecord = async (data: {
+  userId: number;
+  recordId: number;
+}) => {
+  const record = db.record.update({
+    where: {
+      id: data.recordId,
+      activity: {
         userId: data.userId,
-    }, select: {
-        name: true,
-        records: {
-            where: {
-                endedAt: null,
-                deleted: false
-            }
-        }
-    }});
-    return records;
-}
+      },
+    },
+    data: {
+      endedAt: Date(),
+    },
+  });
+  return record;
+};
 
-export const startRecord = async (data: { activityId: number, userId: number }) => {
-    if ((await getActivityById({id: data.activityId}))?.userId != data.userId) {
-        return;
-    }
-    const record = db.record.create({ data: {
-        activityId: data.activityId
-    }});
-    return record;
-}
-
-export const finishRecord = async (data: { userId: number, recordId: number}) => {
-    const record = db.record.update({where: {
-        id: data.recordId,
-        activity: {
-            userId: data.userId
-        }
-    }, data: {
-        endedAt: Date()
-    }});
-    return record;
-}
-
-export const deleteRecord = async (data: { userId: number, recordId: number}) => {
-    const record = db.record.update({where: {
-        id: data.recordId,
-        activity: {
-            userId: data.userId
-        }
-    }, data: {
-        deleted: true
-    }});
-    return record;
-}
+export const deleteRecord = async (data: {
+  userId: number;
+  recordId: number;
+}) => {
+  const record = db.record.update({
+    where: {
+      id: data.recordId,
+      activity: {
+        userId: data.userId,
+      },
+    },
+    data: {
+      deleted: true,
+    },
+  });
+  return record;
+};

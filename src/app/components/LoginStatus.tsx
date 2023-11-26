@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export const LoginStatus = () => {
   const { data, status } = useSession();
-  if (status === 'loading') return <div>loading...</div>;
-  if (status === 'unauthenticated') {
+  if (status === "loading") return <div>loading...</div>;
+  if (status === "unauthenticated") {
     return (
       <div>
         <button
-          onClick={() => signIn('discord')}
+          onClick={() => signIn("discord")}
           className="rounded border border-white p-3"
         >
           Sign in with Discord
