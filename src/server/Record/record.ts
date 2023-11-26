@@ -1,13 +1,14 @@
 import { db } from "@/server/db";
 import { getActivityById } from "../Activity/activity";
 
-export const getRecordById = async (data: { id: number }) => {
+export const getRecordById = async (data: { id: number; userId: number }) => {
   const record = await db.record.findFirst({
     where: {
       id: data.id,
       deleted: false,
       activity: {
         deleted: false,
+        userId: data.userId,
       },
     },
     select: {
@@ -88,12 +89,57 @@ export const startRecord = async (data: {
   activityId: number;
   userId: number;
 }) => {
-  if ((await getActivityById({ id: data.activityId }))?.userId != data.userId) {
+  if (await getActivityById({ id: data.activityId, userId: data.userId})) {
     return;
   }
   const record = db.record.create({
     data: {
       activityId: data.activityId,
+    },
+  });
+  return record;
+};
+
+export const addRecord = async (data: {
+  activityId: number;
+  userId: number;
+  startedAt: Date;
+  endedAt: Date;
+}) => {
+  if (await getActivityById({ id: data.activityId, userId: data.userId })) {
+    return;
+  }
+  const record = db.record.create({
+    data: {
+      activityId: data.activityId,
+      startedAt: data.startedAt,
+      endedAt: data.endedAt,
+    },
+  });
+  return record;
+};
+
+export const updateRecord = async (data: {
+  activityId: number;
+  id: number;
+  userId: number;
+  startedAt: Date;
+  endedAt: Date;
+}) => {
+  if (await getRecordById({ id: data.id, userId: data.userId })) {
+    return;
+  }
+  if (await getActivityById({ id: data.activityId, userId: data.userId })) {
+    return;
+  }
+  const record = db.record.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      activityId: data.activityId,
+      startedAt: data.startedAt,
+      endedAt: data.endedAt,
     },
   });
   return record;
@@ -106,6 +152,7 @@ export const finishRecord = async (data: {
   const record = db.record.update({
     where: {
       id: data.recordId,
+      endedAt: null,
       activity: {
         userId: data.userId,
       },

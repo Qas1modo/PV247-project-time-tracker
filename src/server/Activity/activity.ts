@@ -1,15 +1,18 @@
 import { db } from "@/server/db";
 
-export const getActivityById = async (data: { id: number }) => {
+export const getActivityById = async (data: { id: number, userId: number }) => {
   const activity = await db.activity.findFirst({
-    where: { id: data.id, deleted: false },
+    where: { id: data.id, userId: data.userId, deleted: false },
   });
   return activity;
 };
 
-export const getActivitiesByCategory = async (data: { categoryId: number }) => {
+export const getActivitiesByUserCategory = async (data: {
+  categoryId: number;
+  userId: number;
+}) => {
   const activities = await db.activity.findMany({
-    where: { categoryId: data.categoryId, deleted: false },
+    where: { categoryId: data.categoryId, userId: data.userId, deleted: false },
     include: {
       category: {
         select: {
@@ -23,7 +26,7 @@ export const getActivitiesByCategory = async (data: { categoryId: number }) => {
 
 export const getActivitiesByUser = async (data: { userId: number }) => {
   const activities = await db.activity.findMany({
-    where: { userId: data.userId },
+    where: { userId: data.userId, deleted: false },
     include: {
       category: {
         select: {
@@ -37,13 +40,14 @@ export const getActivitiesByUser = async (data: { userId: number }) => {
 
 export const updateActivityName = async (data: {
   id: number;
+  userId: number;
   name: string;
 }) => {
-  const activities = await db.activity.update({
-    where: { id: data.id },
+  const activity = await db.activity.update({
+    where: { id: data.id, userId: data.userId },
     data: { name: data.name },
   });
-  return activities;
+  return activity;
 };
 
 export const createActivity = async (data: {
@@ -51,15 +55,18 @@ export const createActivity = async (data: {
   userId: number;
   categoryId: number;
 }) => {
-  const activities = await db.activity.create({
+  const activity = await db.activity.create({
     data: { name: data.name, userId: data.userId, categoryId: data.categoryId },
   });
-  return activities;
+  return activity;
 };
 
-export const deleteActivityById = async (data: { id: number }) => {
+export const deleteActivityById = async (data: {
+  id: number;
+  userId: number;
+}) => {
   const activityUpdate = db.activity.update({
-    where: { id: data.id },
+    where: { id: data.id, userId: data.userId },
     data: {
       deleted: true,
     },
