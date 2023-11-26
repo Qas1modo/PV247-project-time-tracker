@@ -2,10 +2,7 @@ import { getUserProgressRecords } from "@/server/Record/record";
 
 import { getServerAuthSession } from "@/server/auth";
 
-export const GET = async (
-  req: Request,
-  { params }: { params: { id: number } },
-) => {
+export const GET = async () => {
   const status = await getServerAuthSession();
   if (!status) {
     return new Response(JSON.stringify(null), {
