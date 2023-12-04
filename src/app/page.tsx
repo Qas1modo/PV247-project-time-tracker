@@ -1,6 +1,6 @@
-import Countdown from "./components/Timer";
-import ActivityItem from "./components/Activity";
-import ActivityContainer from "./components/ActivitiesContainer";
+import Countdown from "../components/Timer";
+import ActivityItem from "../components/Activity";
+import ActivityContainer from "../components/ActivitiesContainer";
 
 export default function Home() {
   return (
