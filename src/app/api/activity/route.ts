@@ -18,10 +18,9 @@ export const POST = async (req: Request) => {
   }
   let data = null;
   try {
-    const requestData = await activitySchema.validate(req.body, {
+    const requestData = await activitySchema.validate(await req.json(), {
       stripUnknown: true,
     });
-    // const requestData = await req.json();
     console.log("POST requestData: ", requestData);
     data = await createActivity({
       name: requestData.name,
