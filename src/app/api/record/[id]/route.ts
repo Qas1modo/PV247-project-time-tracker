@@ -62,7 +62,7 @@ export const PUT = async (
   }
   let data = null;
   try {
-    const requestData = await updateSchema.validate(req.body, {
+    const requestData = await updateSchema.validate(await req.json(), {
       stripUnknown: true,
     });
     data = await updateRecord({

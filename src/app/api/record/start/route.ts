@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
   }
   let data = null;
   try {
-    const requestData = await startSchenma.validate(req.body, {
+    const requestData = await startSchenma.validate(await req.json(), {
       stripUnknown: true,
     });
     data = await startRecord({

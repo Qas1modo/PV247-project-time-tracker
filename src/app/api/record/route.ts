@@ -24,7 +24,7 @@ export const POST = async (req: Request) => {
   }
   let data = null;
   try {
-    const requestData = await startSchema.validate(req.body, {
+    const requestData = await startSchema.validate(await req.json(), {
       stripUnknown: true,
     });
     data = await addRecord({
