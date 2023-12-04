@@ -10,7 +10,7 @@ const ActivityItem = () => {
     const durationInMilliseconds = end - start;
     const hours = Math.floor(durationInMilliseconds / (1000 * 60 * 60));
     const minutes = Math.floor(
-      (durationInMilliseconds % (1000 * 60 * 60)) / (1000 * 60)
+      (durationInMilliseconds % (1000 * 60 * 60)) / (1000 * 60),
     );
 
     return `${hours}h ${minutes}m`;
