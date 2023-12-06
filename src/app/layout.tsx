@@ -6,6 +6,7 @@ import { Providers } from "./Providers";
 import { LoginStatus } from "../components/LoginStatus";
 import { Suspense } from "react";
 import Loading from "../components/Loading";
+import Navigation from "@/components/Navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Suspense fallback={<Loading />}>
+            Activity Time Tracker
             <LoginStatus />
+            <Navigation />
           </Suspense>
           {children}
         </Providers>
