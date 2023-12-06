@@ -1,13 +1,16 @@
 import Countdown from "../components/Timer";
-import ActivityItem from "../components/Activity";
-import ActivityContainer from "../components/ActivitiesContainer";
+import { ActivityContainer } from "../components/ActivitiesContainer";
+import { FilterContainer } from "@/components/FilterContainer";
+import { getActivitiesByUser } from "@/server/Activity/activity";
+import { useSession } from "next-auth/react";
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="flex-col mx-36">
       <button></button>
       <Countdown />
-      <ActivityContainer activities={[{ id: 1 }, { id: 2 }, { id: 3 }]} />
+      <FilterContainer />
+      <ActivityContainer />
     </div>
   );
 }

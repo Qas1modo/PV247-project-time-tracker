@@ -2,18 +2,9 @@
 
 // components/ActivityForm.tsx
 import React, { useContext, useRef } from "react";
-import {
-  useForm,
-  SubmitHandler,
-  Controller,
-  useFieldArray,
-  FormProvider,
-} from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Activity } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { type ActivityFormSchema } from "@/types/activity";
 import { AddActivityZodSchema } from "@/validators/activity";
 import { useAddActivity } from "@/hooks/Activity/activity";
@@ -56,12 +47,11 @@ export const AddActivityDialog = ({
     }
   };
 
-  const { data: sessionData, status: sessionStatus } = useSession();
   const { mutate, isPending } = useAddActivity();
 
   // const useSendActivity = useMutation(async (data: any) => {});
 
-  const myonSubmit = (values) => {
+  const myonSubmit = (values: any) => {
     console.log(values);
     mutate(
       {
@@ -69,7 +59,9 @@ export const AddActivityDialog = ({
         categoryId: Number(values.categoryId),
       },
       {
-        onSuccess: () => closeDialog(),
+        onSuccess: () => {
+          closeDialog();
+        },
         onError: (e) => console.log(e),
       }
     );
@@ -99,13 +91,7 @@ export const AddActivityDialog = ({
       >
         <div className="modal-box">
           <FormProvider {...methods}>
-            <form
-              onSubmit={methods.handleSubmit(myonSubmit, (va) => {
-                console.log("neco nefunguje :(", va);
-                console.log(sessionData?.user.id);
-                console.log(va.categoryId);
-              })}
-            >
+            <form onSubmit={methods.handleSubmit(myonSubmit)}>
               <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
