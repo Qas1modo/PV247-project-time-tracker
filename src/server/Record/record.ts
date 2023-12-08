@@ -33,7 +33,7 @@ export const getUserRecords = async (data: { userId: number }) => {
       deleted: false,
     },
     select: {
-      name: true,
+      id: true,
       records: {
         where: {
           deleted: false,
@@ -89,7 +89,11 @@ export const startRecord = async (data: {
   activityId: number;
   userId: number;
 }) => {
-  if (await getActivityById({ id: data.activityId, userId: data.userId })) {
+  const records = await getRecordById({
+    id: data.activityId,
+    userId: data.userId,
+  });
+  if (records) {
     return;
   }
   const record = db.record.create({
@@ -149,6 +153,7 @@ export const finishRecord = async (data: {
   userId: number;
   recordId: number;
 }) => {
+  const currentDateTime = new Date().toISOString();
   const record = db.record.update({
     where: {
       id: data.recordId,
@@ -158,7 +163,7 @@ export const finishRecord = async (data: {
       },
     },
     data: {
-      endedAt: Date(),
+      endedAt: currentDateTime,
     },
   });
   return record;
