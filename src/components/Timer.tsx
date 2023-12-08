@@ -20,7 +20,7 @@ const Countdown = () => {
   useEffect(() => {
     const interval = setInterval(
       () => setRemaining(formatCountdown(new Date().getTime() - start)),
-      1000,
+      1000
     );
     return () => {
       interval.unref;
