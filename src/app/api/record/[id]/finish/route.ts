@@ -4,7 +4,7 @@ import { Prisma } from "@prisma/client";
 
 export const PUT = async (
   req: Request,
-  { params }: { params: { id: number } },
+  { params }: { params: { id: number } }
 ) => {
   const status = await getServerAuthSession();
   if (!status) {
@@ -15,7 +15,10 @@ export const PUT = async (
   }
   let data = null;
   try {
-    data = await finishRecord({ userId: status.user.id, recordId: params.id });
+    data = await finishRecord({
+      userId: Number(status.user.id),
+      recordId: Number(params.id),
+    });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       return new Response(JSON.stringify(e.cause), {
