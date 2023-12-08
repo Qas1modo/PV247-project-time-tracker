@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type ActivityFormSchema } from "@/types/activity";
 import { AddActivityZodSchema } from "@/validators/activity";
 import { useAddActivity } from "@/hooks/Activity/activity";
+import { useRouter } from "next/navigation";
 
 // interface ActivityFormProps {
 //   isOpen: boolean;
@@ -27,8 +28,8 @@ export const AddActivityDialog = ({
   categoryField: React.ReactNode;
 }) => {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
-  // const [lastActivityId] = useContext(LastActivityContext);
-  // const queryClient = useQueryClient();
+
+  const router = useRouter();
 
   const RequiredMsg = ({ msg }: { msg: string | undefined }) => (
     <p className="text-red-600">{msg}</p>
@@ -49,10 +50,7 @@ export const AddActivityDialog = ({
 
   const { mutate, isPending } = useAddActivity();
 
-  // const useSendActivity = useMutation(async (data: any) => {});
-
-  const myonSubmit = (values: any) => {
-    console.log(values);
+  const onSubmit = (values: any) => {
     mutate(
       {
         name: values.name,
@@ -61,22 +59,11 @@ export const AddActivityDialog = ({
       {
         onSuccess: () => {
           closeDialog();
+          router.refresh();
         },
-        onError: (e) => console.log(e),
       }
     );
-    // try {
-    //   console.log(values);
-    //   // await useSendActivity.mutateAsync(data);
-    //   reset(); // Reset the form values after submit
-    // } catch (error) {
-    //   console.error("Error:", error);
-    //   console.error(values);
-    // }
-    // closeDialog();
   };
-
-  // const methods = useForm<ActivityFormSchema>();
 
   const methods = useForm<ActivityFormSchema>({
     resolver: zodResolver(AddActivityZodSchema),
@@ -91,7 +78,7 @@ export const AddActivityDialog = ({
       >
         <div className="modal-box">
           <FormProvider {...methods}>
-            <form onSubmit={methods.handleSubmit(myonSubmit)}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
               <div className="mb-4">
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
@@ -105,19 +92,8 @@ export const AddActivityDialog = ({
                   {...methods.register("name")}
                   placeholder="Enter activity name"
                 />
-                {/* {methods.errors.name?.message && (
-                  <RequiredMsg msg={methods.errors.name?.message} />
-                )} */}
               </div>
-              <div className="mb-4">
-                {/* Replace options with your predefined categories */}
-                {/* <select {...register("categoryId", { required: true })}>
-                  <option value="10">Low</option>
-                  <option value="11">Medium</option>
-                  <option value="12">High</option>
-                </select> */}
-                {categoryField}
-              </div>
+              <div className="mb-4">{categoryField}</div>
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
                 type="submit"
@@ -137,7 +113,6 @@ export const AddActivityDialog = ({
       </dialog>
       <button
         className="bg-gray-800 text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5"
-        // TODO open dialog
         onClick={openDialog}
       >
         + Add New Activity
