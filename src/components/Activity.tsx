@@ -2,13 +2,10 @@
 
 import React from "react";
 import { StartStop } from "./StartStop";
-import { getCategoryById } from "@/server/Category/category";
-import { getUserRecords } from "@/server/Record/record";
-import { getServerAuthSession } from "@/server/auth";
-import { useGetCategoryById } from "@/hooks/Category/category";
 import { useListRecords } from "@/hooks/Record/record";
 
 import { type Record } from "@/types/record";
+import { Activity } from "@prisma/client";
 
 const colors: { [key: number]: string } = {
   1: "#66c2ff",
@@ -41,7 +38,13 @@ const getTimeSpent = (activityRecords: Record) => {
 };
 
 // const ActivityItem = ({ activity }) => {
-const ActivityItem = ({ activity }: { activity: any }) => {
+const ActivityItem = ({
+  activity,
+  categoryName,
+}: {
+  activity: Activity;
+  categoryName: string | undefined;
+}) => {
   // const { categoryId, name, id } = activity;
   // const session = await getServerAuthSession();
   // const category = await getCategoryById({ id: categoryId });
@@ -66,7 +69,6 @@ const ActivityItem = ({ activity }: { activity: any }) => {
   // );
 
   const { categoryId, name, id } = activity;
-  const { data: category } = useGetCategoryById(categoryId);
   const { data: records, isLoading: recordsLoading } = useListRecords();
   const activityRecords = records?.find((activity) => activity.id === id);
 
@@ -78,7 +80,7 @@ const ActivityItem = ({ activity }: { activity: any }) => {
       <h3 className="text-xl font-semibold mb-2">{name}</h3>
       <p className="text-black">
         <strong>Category: </strong>
-        {category ? category.name : "Category not found"}
+        {categoryName ? categoryName : "Category not found"}
       </p>
 
       {recordsLoading ? (
