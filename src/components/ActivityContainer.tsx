@@ -3,14 +3,10 @@
 import React, { Suspense, useEffect, useState } from "react";
 import ActivityItem from "./Activity";
 import AddActivityDialog from "./AddActivityDialog";
-import { getCategories } from "@/server/Category/category";
-import { ClientSideCategoryField } from "./CategoryField";
-import { getActivitiesByUser } from "@/server/Activity/activity";
-import { useSession } from "next-auth/react";
-import { getServerAuthSession } from "@/server/auth";
 import { FilterContainer } from "./FilterContainer";
-import { getActivities, useGetActivities } from "@/hooks/Activity/activity";
+import { useGetActivities } from "@/hooks/Activity/activity";
 import { type Category } from "@/types/category";
+import { Activity } from "@prisma/client";
 
 // interface ActivityContainerProps {
 //   activities: Activity[];
@@ -24,38 +20,32 @@ import { type Category } from "@/types/category";
 //   endTime: string;
 // }
 
-const UserActivities = ({ activeFilters }: { activeFilters: number[] }) => {
-  const { data, isLoading } = useGetActivities();
-
-  if (isLoading) {
-    return <>Loading...</>;
-  }
-
-  if (data === undefined) {
-    return <></>;
-  }
-
-  // Filter activities based on activeFilters
-  const filteredActivities =
-    activeFilters.length > 0
-      ? data.filter((activity) => activeFilters.includes(activity.categoryId))
-      : data;
-
-  return (
-    <>
-      {filteredActivities.map((activity) => (
-        <ActivityItem key={activity.id} activity={activity} />
-      ))}
-    </>
-  );
-};
-
 export const ActivityContainer = ({
   categories,
 }: {
   categories: Category[];
 }) => {
   const [activeFilters, setActiveFilters] = useState<number[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const { data, isLoading } = useGetActivities();
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setActivities(data);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <>Loading...</>;
+  }
+
+  if (data === undefined) {
+    return <>Failed to load activities data</>;
+  }
+
+  const handleAddActivity = (newActivity: Activity) => {
+    setActivities((prevActivities) => [...prevActivities, newActivity]);
+  };
 
   const onClickFilter = (evt: React.MouseEvent<HTMLInputElement>) => {
     const clickedFilterId: number = Number((evt.target as HTMLInputElement).id);
@@ -72,16 +62,31 @@ export const ActivityContainer = ({
     });
   };
 
-  useEffect(() => {
-    console.log("active filters changed: ", activeFilters);
-  }, [activeFilters]);
+  const filteredActivities =
+    activeFilters.length > 0
+      ? activities.filter((activity) =>
+          activeFilters.includes(activity.categoryId)
+        )
+      : activities;
 
   return (
     <>
       <FilterContainer categories={categories} onClickFilter={onClickFilter} />
       <div className="flex flex-wrap justify-start">
-        <AddActivityDialog categories={categories} />
-        <UserActivities activeFilters={activeFilters} />
+        <AddActivityDialog
+          categories={categories}
+          onAddActivity={handleAddActivity}
+        />
+        {filteredActivities.map((activity) => (
+          <ActivityItem
+            key={activity.id}
+            activity={activity}
+            categoryName={
+              categories.find((category) => category.id === activity.categoryId)
+                ?.name
+            }
+          />
+        ))}
       </div>
     </>
   );
