@@ -2,11 +2,12 @@
 
 import { useFormContext } from "react-hook-form";
 import { type ActivityFormSchema } from "@/types/activity";
+import { type Category } from "@/types/category";
 
 export const ClientSideCategoryField = ({
   categories,
 }: {
-  categories: { id: number; name: string }[];
+  categories: Category[];
 }) => {
   const { setValue, watch, register } = useFormContext<ActivityFormSchema>();
   const typeValue = watch("categoryId");

@@ -7,8 +7,12 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type ActivityFormSchema } from "@/types/activity";
 import { AddActivityZodSchema } from "@/validators/activity";
-import { useAddActivity } from "@/hooks/Activity/activity";
+import { useAddActivity, useGetActivities } from "@/hooks/Activity/activity";
 import { useRouter } from "next/navigation";
+import { useGetCategories } from "@/hooks/Category/category";
+import { ClientSideCategoryField } from "./CategoryField";
+
+import { type Category } from "@/types/category";
 
 // interface ActivityFormProps {
 //   isOpen: boolean;
@@ -23,9 +27,9 @@ import { useRouter } from "next/navigation";
 // }
 
 export const AddActivityDialog = ({
-  categoryField,
+  categories,
 }: {
-  categoryField: React.ReactNode;
+  categories: Category[];
 }) => {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
 
@@ -93,7 +97,9 @@ export const AddActivityDialog = ({
                   placeholder="Enter activity name"
                 />
               </div>
-              <div className="mb-4">{categoryField}</div>
+              <div className="mb-4">
+                <ClientSideCategoryField categories={categories} />
+              </div>
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
                 type="submit"
