@@ -2,11 +2,11 @@ import { getCategoryById } from "@/server/Category/category";
 
 export const GET = async (
   req: Request,
-  { params }: { params: { id: number } },
+  { params }: { params: { id: number } }
 ) => {
   let category = null;
   try {
-    category = await getCategoryById({ id: params.id });
+    category = await getCategoryById({ id: Number(params.id) });
   } catch {
     return new Response(JSON.stringify(null), {
       status: 500,
