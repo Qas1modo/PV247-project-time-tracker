@@ -40,13 +40,13 @@ export const StartStop = ({
   }, [intervalId]);
 
   const handleStart = () => {
-    startTimer();
     startRecording(
       {
         activityId: activityId,
       },
       {
         onSuccess: (data) => {
+          startTimer();
           setRecordId(data.id);
         },
       }
@@ -54,13 +54,13 @@ export const StartStop = ({
   };
 
   const handleStop = useCallback(() => {
-    stopTimer();
-
     if (recordId)
       stopRecording(
         { recordId },
         {
-          onSuccess: (data) => {},
+          onSuccess: (data) => {
+            stopTimer();
+          },
         }
       );
   }, [recordId, stopRecording, stopTimer]);
@@ -76,12 +76,12 @@ export const StartStop = ({
   };
 
   useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (isRunning) {
-        event.preventDefault();
-        event.returnValue = "Mas spusteny casovac"; // Some browsers require a return value to display a prompt
-      }
-    };
+    // const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    //   if (isRunning) {
+    //     event.preventDefault();
+    //     event.returnValue = "Mas spusteny casovac"; // Some browsers require a return value to display a prompt
+    //   }
+    // };
 
     const handleUnload = (event: BeforeUnloadEvent) => {
       if (isRunning) {
@@ -92,11 +92,11 @@ export const StartStop = ({
       }
     };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    // window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("unload", handleUnload);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // window.removeEventListener("beforeunload", handleBeforeUnload);
       window.removeEventListener("unload", handleUnload);
     };
   }, [handleStop, isRunning, timeSpent]);

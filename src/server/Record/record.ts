@@ -89,11 +89,7 @@ export const startRecord = async (data: {
   activityId: number;
   userId: number;
 }) => {
-  const records = await getRecordById({
-    id: data.activityId,
-    userId: data.userId,
-  });
-  if (records) {
+  if (!(await getActivityById({ id: data.activityId, userId: data.userId }))) {
     return;
   }
   const record = db.record.create({
@@ -110,7 +106,7 @@ export const addRecord = async (data: {
   startedAt: Date;
   endedAt: Date;
 }) => {
-  if (await getActivityById({ id: data.activityId, userId: data.userId })) {
+  if (!(await getActivityById({ id: data.activityId, userId: data.userId }))) {
     return;
   }
   const record = db.record.create({
