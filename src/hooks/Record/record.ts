@@ -1,4 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { type Record } from "@/types/record";
+
+export const useListRecords = () =>
+  useQuery({
+    queryKey: ["list", "records"],
+    queryFn: async () => {
+      const response = await fetch("api/records");
+      return (await response.json()) as Record[];
+    },
+  });
 
 const startRecord = async (data: { activityId: number }) => {
   const response = await fetch("/api/record/start", {
