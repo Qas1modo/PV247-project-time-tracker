@@ -105,10 +105,18 @@ export const StartStop = ({
     <>
       <label className="swap">
         <input type="checkbox" />
-        <div className="swap-on" onClick={handleStart}>
+        <div
+          className="swap-on font-bold"
+          style={{ color: "red" }}
+          onClick={handleStart}
+        >
           STOP
         </div>
-        <div className="swap-off" onClick={handleStop}>
+        <div
+          className="swap-off font-bold"
+          style={{ color: "lime" }}
+          onClick={handleStop}
+        >
           START
         </div>
       </label>
