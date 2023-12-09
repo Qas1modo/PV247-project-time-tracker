@@ -1,6 +1,5 @@
 "use client";
 
-// components/ActivityForm.tsx
 import React, { useContext, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
@@ -8,32 +7,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type ActivityFormSchema } from "@/types/activity";
 import { AddActivityZodSchema } from "@/validators/activity";
 import { useAddActivity, useGetActivities } from "@/hooks/Activity/activity";
-import { useRouter } from "next/navigation";
-import { useGetCategories } from "@/hooks/Category/category";
 import { ClientSideCategoryField } from "./CategoryField";
 
 import { type Category } from "@/types/category";
-
-// interface ActivityFormProps {
-//   isOpen: boolean;
-//   onClose: () => void;
-//   onSubmit: SubmitHandler<FormData>;
-// }
-
-// interface FormData {
-//   name: string;
-//   categoryId: string;
-//   userId: number;
-// }
+import { Activity } from "@prisma/client";
 
 export const AddActivityDialog = ({
   categories,
+  onAddActivity,
 }: {
   categories: Category[];
+  onAddActivity: (activity: Activity) => void;
 }) => {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
-
-  const router = useRouter();
 
   const RequiredMsg = ({ msg }: { msg: string | undefined }) => (
     <p className="text-red-600">{msg}</p>
@@ -54,16 +40,16 @@ export const AddActivityDialog = ({
 
   const { mutate, isPending } = useAddActivity();
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (data: ActivityFormSchema) => {
     mutate(
       {
-        name: values.name,
-        categoryId: Number(values.categoryId),
+        name: data.name,
+        categoryId: Number(data.categoryId),
       },
       {
-        onSuccess: () => {
+        onSuccess: (data: Activity) => {
+          onAddActivity(data);
           closeDialog();
-          router.refresh();
         },
       }
     );
