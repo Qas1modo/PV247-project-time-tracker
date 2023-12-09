@@ -1,62 +1,58 @@
-export const FilterContainer = () => {
+"use client";
+
+import { type Category } from "@/types/category";
+import { MouseEventHandler } from "react";
+
+const colors: { [key: number]: string } = {
+  1: "#66c2ff",
+  2: "#ff6666",
+  3: "#ffd700",
+  4: "#98fb98",
+  5: "#fa8072",
+  6: "#c8a2c8",
+  7: "#ff66b2",
+  8: "#708090",
+  9: "#c0c0c0",
+  10: "#008080",
+};
+
+const FilterButton = ({
+  category,
+  onClickFilter,
+}: {
+  category: { id: number; name: string };
+  onClickFilter: MouseEventHandler<HTMLInputElement>;
+}) => {
+  return (
+    <input
+      id={category.id.toString()}
+      type="checkbox"
+      aria-label={category.name}
+      className="btn btn-outline border-4"
+      style={{ borderColor: colors[category.id], color: colors[category.id] }}
+      onClick={onClickFilter}
+    />
+  );
+};
+
+export const FilterContainer = ({
+  categories,
+  onClickFilter,
+}: {
+  categories: Category[];
+  onClickFilter: MouseEventHandler<HTMLInputElement>;
+}) => {
   return (
     <>
-      <input
-        type="checkbox"
-        aria-label="Vše"
-        className="btn btn-outline"
-        defaultChecked
-      />
-      <input
-        type="checkbox"
-        aria-label="Volný čas"
-        className="btn btn-outline border-volny-cas"
-      />
-      <input
-        type="checkbox"
-        aria-label="Práce"
-        className="btn btn-outline border-prace"
-      />
-      <input
-        type="checkbox"
-        aria-label="Škola"
-        className="btn btn-outline border-skola"
-      />
-      <input
-        type="checkbox"
-        aria-label="Sport"
-        className="btn btn-outline border-sport"
-      />
-      <input
-        type="checkbox"
-        aria-label="Koníčky"
-        className="btn btn-outline border-konicky"
-      />
-      <input
-        type="checkbox"
-        aria-label="Seberealizace"
-        className="btn btn-outline border-seberealizace"
-      />
-      <input
-        type="checkbox"
-        aria-label="Cestování"
-        className="btn btn-outline border-cestovani"
-      />
-      <input
-        type="checkbox"
-        aria-label="Domácí práce"
-        className="btn btn-outline border-domaci-prace"
-      />
-      <input
-        type="checkbox"
-        aria-label="Povinnosti"
-        className="btn btn-outline border-povinnosti"
-      />
-      <input
-        type="checkbox"
-        aria-label="Spánek"
-        className="btn btn-outline border-spanek"
-      />
+      {categories.map((category) => {
+        return (
+          <FilterButton
+            key={category.id}
+            category={category}
+            onClickFilter={onClickFilter}
+          />
+        );
+      })}
     </>
   );
 };
