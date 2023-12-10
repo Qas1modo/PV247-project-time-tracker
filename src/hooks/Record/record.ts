@@ -39,7 +39,24 @@ const getAllRecords = async () => {
   return json;
 };
 
+const addRecord = async (data: {
+  activityId: number;
+  startedAt: Date;
+  endedAt: Date;
+}) => {
+  const response = await fetch(`/api/record`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
+  const json = await response.json();
+
+  return json;
+};
+
 export const useStartRecord = () => useMutation({ mutationFn: startRecord });
 export const useFinisrRecord = () => useMutation({ mutationFn: finishRecord });
 export const useGetAllRecords = () =>
   useMutation({ mutationFn: getAllRecords });
+
+export const useAddRecord = () => useMutation({ mutationFn: addRecord });

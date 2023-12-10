@@ -6,6 +6,7 @@ import { useListRecords } from "@/hooks/Record/record";
 
 import { type Record } from "@/types/record";
 import { Activity } from "@prisma/client";
+import AddRecordDialog from "./AddRecordDialog";
 
 const colors: { [key: number]: string } = {
   1: "#66c2ff",
@@ -73,25 +74,39 @@ const ActivityItem = ({
   const activityRecords = records?.find((activity) => activity.id === id);
 
   return (
-    <div
-      className="text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5"
-      style={{ backgroundColor: colors[categoryId] }}
-    >
-      <h3 className="text-xl font-semibold mb-2">{name}</h3>
-      <p className="text-black">
-        <strong>Category: </strong>
-        {categoryName ? categoryName : "Category not found"}
-      </p>
-
-      {recordsLoading ? (
-        <>Loading time...</>
-      ) : activityRecords === undefined ? (
-        <>No records to show.</>
-      ) : (
-        <StartStop activityId={id} timeSpent={getTimeSpent(activityRecords)} />
-      )}
-    </div>
+    <>
+      <div
+        className="text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5"
+        style={{ backgroundColor: colors[categoryId] }}
+      >
+        <div className="flex">
+          <div className="flex-grow">
+            <h3 className="text-xl font-semibold mb-2">{name}</h3>
+            <p className="text-black">
+              <strong>Category: </strong>
+              {categoryName ? categoryName : "Category not found"}
+            </p>
+          </div>
+          <div className="flex justify-end items-end">
+            <AddRecordDialog activity={activity} />
+          </div>
+        </div>
+        <div className="flex">
+          <div className="flex-grow">
+            {recordsLoading ? (
+              <>Loading time...</>
+            ) : activityRecords === undefined ? (
+              <>No records to show.</>
+            ) : (
+              <StartStop
+                activityId={id}
+                timeSpent={getTimeSpent(activityRecords)}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
-
 export default ActivityItem;
