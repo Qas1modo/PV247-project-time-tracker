@@ -105,20 +105,25 @@ export const StartStop = ({
     <>
       <label className="swap">
         <input type="checkbox" />
-        <div
-          className="swap-on font-bold"
-          style={{ color: "red" }}
+        {/* sun icon */}
+        <svg
+          className="swap-on fill-current w-10 h-10"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
           onClick={handleStart}
         >
-          STOP
-        </div>
-        <div
-          className="swap-off font-bold"
-          style={{ color: "lime" }}
+          <path d="M3 21V3h18v18H3Z" />
+        </svg>
+
+        {/* moon icon */}
+        <svg
+          className="swap-off fill-current w-10 h-10"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 34 34"
           onClick={handleStop}
         >
-          START
-        </div>
+          <path d="M32.16 16.08L8.94 4.47A2.07 2.07 0 0 0 6 6.32v23.21a2.06 2.06 0 0 0 3 1.85l23.16-11.61a2.07 2.07 0 0 0 0-3.7Z" />
+        </svg>
       </label>
       <div>{formatTime(timer)}</div>
     </>
