@@ -38,7 +38,6 @@ const getTimeSpent = (activityRecords: Record) => {
   return Math.floor(time / 1000);
 };
 
-// const ActivityItem = ({ activity }) => {
 const ActivityItem = ({
   activity,
   categoryName,
@@ -46,29 +45,6 @@ const ActivityItem = ({
   activity: Activity;
   categoryName: string | undefined;
 }) => {
-  // const { categoryId, name, id } = activity;
-  // const session = await getServerAuthSession();
-  // const category = await getCategoryById({ id: categoryId });
-  // if (!session) {
-  //   return <></>;
-  // }
-  // const records = await getUserRecords({ userId: session.user.id });
-
-  // return (
-  //   <div className="bg-gray-800 text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5">
-  //     <h3 className="text-xl font-semibold mb-2">{name}</h3>
-  //     <p className="text-gray-400">
-  //       <strong>Category: </strong>
-  //       {category ? category.name : "Category not found"}
-  //     </p>
-
-  //     <StartStop
-  //       activityId={id}
-  //       timeSpent={getTimeSpent(records.filter((record) => record.id === id))}
-  //     />
-  //   </div>
-  // );
-
   const { categoryId, name, id } = activity;
   const { data: records, isLoading: recordsLoading } = useListRecords();
   const activityRecords = records?.find((activity) => activity.id === id);
@@ -76,7 +52,7 @@ const ActivityItem = ({
   return (
     <>
       <div
-        className="text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5"
+        className="relative text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5"
         style={{ backgroundColor: colors[categoryId] }}
       >
         <div className="flex">
@@ -98,10 +74,12 @@ const ActivityItem = ({
             ) : activityRecords === undefined ? (
               <>No records to show.</>
             ) : (
-              <StartStop
-                activityId={id}
-                timeSpent={getTimeSpent(activityRecords)}
-              />
+              <div className="absolute bottom-0 right-0 p-2">
+                <StartStop
+                  activityId={id}
+                  timeSpent={getTimeSpent(activityRecords)}
+                />
+              </div>
             )}
           </div>
         </div>
