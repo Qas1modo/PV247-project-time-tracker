@@ -101,7 +101,7 @@ export const PUT = async (
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { id: number } },
+  { params }: { params: { id: string } },
 ) => {
   const status = await getServerAuthSession();
   if (!status) {
@@ -110,9 +110,16 @@ export const DELETE = async (
       statusText: "Unauthorized",
     });
   }
+  let id = Number(params.id);
+  if (Number.isNaN(id)) {
+    return new Response(JSON.stringify(null), {
+      status: 400,
+      statusText: "Bad request",
+    });
+  }
   let data = null;
   try {
-    data = await deleteActivityById({ id: params.id, userId: status.user.id });
+    data = await deleteActivityById({ id: id, userId: status.user.id });
   } catch (e) {
     if (e instanceof ValidationError) {
       return new Response(JSON.stringify(e.errors), {

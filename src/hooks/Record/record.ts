@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { type Records } from "@/types/record";
-import { Record } from "@prisma/client";
 
 export const useListRecords = () =>
   useQuery({
@@ -10,15 +9,6 @@ export const useListRecords = () =>
       return (await response.json()) as Records[];
     },
   });
-
-export const useActivitiesRecord = (data: { activityId: number }) =>
-  useQuery({
-    queryKey: ["activityRecord"],
-    queryFn: async () => {
-      const response = await fetch(`/api/records/${data.activityId}`);
-      return (await response.json()) as Record[];
-    },
-});
 
 const startRecord = async (data: { activityId: number }) => {
   const response = await fetch("/api/record/start", {
