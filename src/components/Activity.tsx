@@ -7,10 +7,10 @@ import { useListRecords } from "@/hooks/Record/record";
 import { Record } from "@prisma/client";
 import { Activity } from "@prisma/client";
 import AddRecordDialog from "./AddRecordDialog";
-import { record } from "zod";
 import Link from "next/link";
 import { colors } from "@/utils/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { UseMutationResult } from "@tanstack/react-query";
+
 
 const getTimeSpent = (records: Record[]) => {
   if (records === undefined) {
@@ -34,13 +34,14 @@ const getTimeSpent = (records: Record[]) => {
 const ActivityItem = ({
   activity,
   categoryName,
+  removeActivity
 }: {
   activity: Activity;
   categoryName: string | undefined;
+  removeActivity: UseMutationResult<Response, Error, number, unknown>;
 }) => {
   const [records, setRecords] = useState<Record[]>([]);
   const { data, isLoading: recordsLoading } = useListRecords();
-  const queryClient = useQueryClient();
   useEffect(() => {
     const filteredRecords = data?.find(
       (activityRecord) => activityRecord.id === activity.id
@@ -64,22 +65,6 @@ const ActivityItem = ({
       }
     });
   };
-  const removeActivity = useMutation({
-    mutationFn: async (activityId: number) => {
-        return await fetch(`/api/activity/${activityId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-    },
-    onSuccess: () => {
-        queryClient.refetchQueries();
-    },
-    onError: (error) => {
-        alert(`Error during deletion: ${error}`);
-    },
-  });
 
   return (
     <>

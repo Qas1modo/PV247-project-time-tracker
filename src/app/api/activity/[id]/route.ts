@@ -133,18 +133,18 @@ export const DELETE = async (
         statusText: e.message,
       });
     }
-    return new Response(JSON.stringify(data), {
+    return new Response(JSON.stringify(id), {
       status: 500,
       statusText: "Internal server error",
     });
   }
   if (data === null) {
-    return new Response(JSON.stringify(data), {
+    return new Response(JSON.stringify(id), {
       status: 400,
       statusText: "Unable to update this activity, invalid data or permissions",
     });
   }
-  return new Response(JSON.stringify(data), {
+  return new Response(JSON.stringify(id), {
     status: 200,
   });
 };

@@ -7,6 +7,7 @@ import { FilterContainer } from "./FilterContainer";
 import { useGetActivities } from "@/hooks/Activity/activity";
 import { type Category } from "@/types/category";
 import { Activity } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // interface ActivityContainerProps {
 //   activities: Activity[];
@@ -28,6 +29,29 @@ export const ActivityContainer = ({
   const [activeFilters, setActiveFilters] = useState<number[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const { data, isLoading } = useGetActivities();
+  const queryClient = useQueryClient();
+
+  const removeActivity = useMutation({
+    mutationFn: async (activityId: number) => {
+        return await fetch(`/api/activity/${activityId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+    },
+    onSuccess: async (data) => {
+        let id = Number(await data.json());
+        console.log(id);
+        if (!Number.isNaN(id)) {
+          setActivities((prevActivities) => prevActivities.filter(a => a.id != id));
+        }
+        queryClient.refetchQueries();
+    },
+    onError: (error) => {
+        alert(`Error during deletion: ${error}`);
+    },
+  });
 
   useEffect(() => {
     if (data !== undefined) {
@@ -86,6 +110,7 @@ export const ActivityContainer = ({
           <ActivityItem
             key={activity.id}
             activity={activity}
+            removeActivity={removeActivity}
             categoryName={
               categories.find((category) => category.id === activity.categoryId)
                 ?.name
