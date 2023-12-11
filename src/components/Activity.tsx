@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StartStop } from "./StartStop";
 import { useListRecords } from "@/hooks/Record/record";
 
-import { type Record } from "@/types/record";
+import { Record } from "@prisma/client";
 import { Activity } from "@prisma/client";
 import AddRecordDialog from "./AddRecordDialog";
+import { record } from "zod";
 
 const colors: { [key: number]: string } = {
   1: "#66c2ff",
@@ -21,20 +22,22 @@ const colors: { [key: number]: string } = {
   10: "#008080",
 };
 
-const getTimeSpent = (activityRecords: Record) => {
-  const { id, records } = activityRecords;
+const getTimeSpent = (records: Record[]) => {
+  if (records === undefined) {
+    return 0;
+  }
   let time = 0;
-  const now = Date.now();
 
   records.forEach((record) => {
-    const endedAt = record.endedAt ? new Date(record.endedAt).getTime() : now;
+    const endedAt = record.endedAt
+      ? new Date(record.endedAt).getTime()
+      : Date.now();
     const startedAt = new Date(record.startedAt).getTime();
 
     if (endedAt && startedAt) {
       time += endedAt - startedAt;
     }
   });
-
   return Math.floor(time / 1000);
 };
 
@@ -45,40 +48,70 @@ const ActivityItem = ({
   activity: Activity;
   categoryName: string | undefined;
 }) => {
-  const { categoryId, name, id } = activity;
-  const { data: records, isLoading: recordsLoading } = useListRecords();
-  const activityRecords = records?.find((activity) => activity.id === id);
+  const [records, setRecords] = useState<Record[]>([]);
+  const { data, isLoading: recordsLoading } = useListRecords();
+
+  useEffect(() => {
+    const filteredRecords = data?.find(
+      (activityRecord) => activityRecord.id === activity.id
+    );
+    if (filteredRecords !== undefined) {
+      setRecords(filteredRecords.records);
+    }
+  }, [data, activity.id]);
+
+  const handleAddRecord = (newRecord: Record) => {
+    setRecords((prevRecords) => {
+      const existingRecordIndex = prevRecords.findIndex(
+        (record) => record.id === newRecord.id
+      );
+      if (existingRecordIndex !== -1) {
+        const updatedRecords = [...prevRecords];
+        updatedRecords[existingRecordIndex] = newRecord;
+        return updatedRecords;
+      } else {
+        return [...prevRecords, newRecord];
+      }
+    });
+  };
 
   return (
     <>
       <div
         className="relative text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5"
-        style={{ backgroundColor: colors[categoryId] }}
+        style={{ backgroundColor: colors[activity.categoryId] }}
       >
         <div className="flex">
           <div className="flex-grow">
-            <h3 className="text-xl font-semibold mb-2">{name}</h3>
+            <h3 className="text-xl font-semibold mb-2">{activity.name}</h3>
             <p className="text-black">
               <strong>Category: </strong>
               {categoryName ? categoryName : "Category not found"}
             </p>
           </div>
-          <div className="flex justify-end items-end">
-            <AddRecordDialog activity={activity} />
-          </div>
-        </div>
-        <div className="flex">
-          <div className="flex-grow">
+          <div className="flex items-end">
+            <div className="pr-8">
+              <AddRecordDialog
+                activity={activity}
+                onAddRecord={handleAddRecord}
+              />
+            </div>
             {recordsLoading ? (
               <>Loading time...</>
-            ) : activityRecords === undefined ? (
-              <>No records to show.</>
             ) : (
-              <div className="absolute bottom-0 right-0 p-2">
-                <StartStop
-                  activityId={id}
-                  timeSpent={getTimeSpent(activityRecords)}
-                />
+              <div className="flex">
+                <div className="flex-grow">
+                  <div className="ml-2 mr-2">
+                    <StartStop
+                      activityId={activity.id}
+                      timeSpent={getTimeSpent(records)}
+                      unfinishedRecordId={
+                        records.find((record) => record.endedAt === null)?.id
+                      }
+                      onFinishRecord={handleAddRecord}
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </div>

@@ -1,27 +1,40 @@
 "use client";
 
-import {
-  useFinisrRecord,
-  useGetAllRecords,
-  useStartRecord,
-} from "@/hooks/Record/record";
-import { useEffect, useState, useCallback } from "react";
+import { useFinisrRecord, useStartRecord } from "@/hooks/Record/record";
+import { Record } from "@prisma/client";
+import { useEffect, useState, useCallback, use } from "react";
 
 export const StartStop = ({
   activityId,
   timeSpent,
+  unfinishedRecordId,
+  onFinishRecord,
 }: {
   activityId: number;
   timeSpent: number;
+  unfinishedRecordId: number | undefined;
+  onFinishRecord: (record: Record) => void;
 }) => {
   const { mutate: startRecording, isPending: startPending } = useStartRecord();
   const { mutate: stopRecording, isPending: stopPending } = useFinisrRecord();
-  const { mutate: getAllRecords, isPending: getAllPending } =
-    useGetAllRecords();
-  const [recordId, setRecordId] = useState(null);
+
+  const [recordId, setRecordId] = useState<number | undefined>(
+    unfinishedRecordId
+  );
   const [timer, setTimer] = useState(timeSpent);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    if (unfinishedRecordId !== undefined && !isRunning) {
+      startTimer();
+      setRecordId(unfinishedRecordId);
+    }
+  }, [unfinishedRecordId, isRunning]);
+
+  useEffect(() => {
+    setTimer(timeSpent);
+  }, [timeSpent]);
 
   const startTimer = () => {
     const id = setInterval(() => {
@@ -40,30 +53,33 @@ export const StartStop = ({
   }, [intervalId]);
 
   const handleStart = () => {
-    startRecording(
-      {
-        activityId: activityId,
-      },
-      {
-        onSuccess: (data) => {
-          startTimer();
-          setRecordId(data.id);
+    if (!isRunning)
+      startRecording(
+        {
+          activityId: activityId,
         },
-      }
-    );
+        {
+          onSuccess: (data) => {
+            startTimer();
+            setRecordId(data.id);
+          },
+        }
+      );
   };
 
-  const handleStop = useCallback(() => {
-    if (recordId)
+  const handleStop = () => {
+    if (recordId && isRunning) {
       stopRecording(
         { recordId },
         {
           onSuccess: (data) => {
             stopTimer();
+            onFinishRecord(data);
           },
         }
       );
-  }, [recordId, stopRecording, stopTimer]);
+    }
+  };
 
   const formatTime = (time: number) => {
     const hours = Math.floor(time / 3600);
@@ -75,56 +91,34 @@ export const StartStop = ({
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  useEffect(() => {
-    // const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-    //   if (isRunning) {
-    //     event.preventDefault();
-    //     event.returnValue = "Mas spusteny casovac"; // Some browsers require a return value to display a prompt
-    //   }
-    // };
-
-    const handleUnload = (event: BeforeUnloadEvent) => {
-      if (isRunning) {
-        event.preventDefault();
-        event.returnValue = ""; // Some browsers require a return value to display a prompt
-
-        handleStop();
-      }
-    };
-
-    // window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("unload", handleUnload);
-
-    return () => {
-      // window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("unload", handleUnload);
-    };
-  }, [handleStop, isRunning, timeSpent]);
-
   return (
     <>
-      <label className="swap">
-        <input type="checkbox" />
+      <button>
         {/* sun icon */}
-        <svg
-          className="swap-on fill-current w-10 h-10"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          onClick={handleStart}
-        >
-          <path d="M3 21V3h18v18H3Z" />
-        </svg>
+        {isRunning && (
+          <svg
+            className={"swap-on fill-current w-10 h-10"}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            onClick={handleStop}
+          >
+            <path d="M3 21V3h18v18H3Z" />
+          </svg>
+        )}
 
         {/* moon icon */}
-        <svg
-          className="swap-off fill-current w-10 h-10"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 34 34"
-          onClick={handleStop}
-        >
-          <path d="M32.16 16.08L8.94 4.47A2.07 2.07 0 0 0 6 6.32v23.21a2.06 2.06 0 0 0 3 1.85l23.16-11.61a2.07 2.07 0 0 0 0-3.7Z" />
-        </svg>
-      </label>
+
+        {!isRunning && (
+          <svg
+            className={" swap-off fill-current w-10 h-10"}
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 34 34"
+            onClick={handleStart}
+          >
+            <path d="M32.16 16.08L8.94 4.47A2.07 2.07 0 0 0 6 6.32v23.21a2.06 2.06 0 0 0 3 1.85l23.16-11.61a2.07 2.07 0 0 0 0-3.7Z" />
+          </svg>
+        )}
+      </button>
       <div>{formatTime(timer)}</div>
     </>
   );

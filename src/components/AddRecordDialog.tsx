@@ -1,9 +1,16 @@
 import { useAddRecord } from "@/hooks/Record/record";
+import { Record } from "@prisma/client";
 import { Activity } from "@prisma/client";
 import React, { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
-const AddRecordDialog = ({ activity }: { activity: Activity }) => {
+const AddRecordDialog = ({
+  activity,
+  onAddRecord,
+}: {
+  activity: Activity;
+  onAddRecord: (newRecord: Record) => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const methods = useForm();
   const { mutate: addRecord } = useAddRecord();
@@ -24,7 +31,8 @@ const AddRecordDialog = ({ activity }: { activity: Activity }) => {
         endedAt: data.endDate,
       },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          onAddRecord(data);
           closeDialog();
         },
       }
@@ -64,7 +72,9 @@ const AddRecordDialog = ({ activity }: { activity: Activity }) => {
                 </label>
                 <input
                   type="datetime-local"
-                  defaultValue={new Date().toISOString().slice(0, 16)}
+                  defaultValue={new Date(new Date().getTime() - 60 * 60 * 1000)
+                    .toISOString()
+                    .slice(0, 16)}
                   {...methods.register("startDate", {
                     required: true,
                     validate: validateStartDate,
@@ -88,7 +98,7 @@ const AddRecordDialog = ({ activity }: { activity: Activity }) => {
               <div className="flex justify-between p-4">
                 <button
                   type="submit"
-                  className="text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
                 >
                   Add
                 </button>

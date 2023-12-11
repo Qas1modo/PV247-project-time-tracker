@@ -71,7 +71,12 @@ export const ActivityContainer = ({
 
   return (
     <>
-      <FilterContainer categories={categories} onClickFilter={onClickFilter} />
+      <div className="p-4">
+        <FilterContainer
+          categories={categories}
+          onClickFilter={onClickFilter}
+        />
+      </div>
       <div className="flex flex-wrap justify-start">
         <AddActivityDialog
           categories={categories}
