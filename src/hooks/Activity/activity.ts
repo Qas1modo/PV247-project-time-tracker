@@ -1,13 +1,5 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
-
-type Activity = {
-  id: number;
-  createdAt: Date;
-  userId: number;
-  categoryId: number;
-  deleted: boolean;
-  name: string;
-};
+import { type Activity } from "@/types/activity";
 
 export const getActivities = async () => {
   const response = await fetch("/api/activities", { method: "GET" });
