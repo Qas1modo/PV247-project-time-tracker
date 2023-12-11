@@ -100,7 +100,7 @@ const SummaryPage = () => {
     if (timeTotal && activitiesWithTimeSpent?.length) {
       data.push({
         id: Number(category.id),
-        value: (timeTotal / totalTimeSpent) * 100,
+        value: +((timeTotal / totalTimeSpent) * 100).toFixed(2),
         label: category.name,
         color: colors[category.id],
       });
