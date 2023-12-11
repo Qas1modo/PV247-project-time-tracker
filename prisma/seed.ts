@@ -4,17 +4,17 @@ async function main() {
   await prisma.category.deleteMany();
   const freeTime = await prisma.category.create({
     data: {
-      name: "Volný čas",
+      name: "Free time",
     },
   });
   const work = await prisma.category.create({
     data: {
-      name: "Práce",
+      name: "Work",
     },
   });
   const school = await prisma.category.create({
     data: {
-      name: "Škola",
+      name: "School",
     },
   });
   const sport = await prisma.category.create({
@@ -24,32 +24,32 @@ async function main() {
   });
   const hobbies = await prisma.category.create({
     data: {
-      name: "Koníčky",
+      name: "Hobbies",
     },
   });
   const self = await prisma.category.create({
     data: {
-      name: "Seberealizace",
+      name: "Self-realization",
     },
   });
   const traveling = await prisma.category.create({
     data: {
-      name: "Cestování",
+      name: "Traveling",
     },
   });
   const houseWork = await prisma.category.create({
     data: {
-      name: "Domácí práce",
+      name: "House work",
     },
   });
   const responsibilities = await prisma.category.create({
     data: {
-      name: "Povinosti",
+      name: "Repsonsibilities",
     },
   });
   const sleep = await prisma.category.create({
     data: {
-      name: "Spánek",
+      name: "Sleep",
     },
   });
   console.log({
