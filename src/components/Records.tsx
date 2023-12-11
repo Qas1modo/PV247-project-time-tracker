@@ -44,7 +44,7 @@ const Records = ({activityId, activityName}: {
                 <li key={record.id} className="flex gap-2 flex-row justify-between items-center border p-2 mb-2 w-full">
                     <div className="font-semibold">{record.id}</div>
                     <div className="w-72">{(new Date(record?.startedAt ?? "").toUTCString())}</div>
-                    <div className="w-72">{record.endedAt ? (new Date(record?.startedAt ?? "").toUTCString()) : "Not yet finished"}</div>
+                    <div className="w-72">{record.endedAt ? (new Date(record?.endedAt ?? "").toUTCString()) : "Not yet finished"}</div>
                     <button
                     onClick={() => removeRecord.mutate(record.id)}
                     className="text-red-500 hover:text-red-700 cursor-pointer"
