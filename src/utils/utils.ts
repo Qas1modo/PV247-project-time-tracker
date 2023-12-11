@@ -18,3 +18,16 @@ export const getTimeSpent = (records: Record[]) => {
   });
   return Math.floor(time / 1000);
 };
+
+export const colors: { [key: number]: string } = {
+  1: "#66c2ff",
+  2: "#ff6666",
+  3: "#ffd700",
+  4: "#98fb98",
+  5: "#fa8072",
+  6: "#c8a2c8",
+  7: "#ff66b2",
+  8: "#708090",
+  9: "#c0c0c0",
+  10: "#008080",
+};
