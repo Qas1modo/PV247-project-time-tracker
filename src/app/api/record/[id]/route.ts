@@ -103,8 +103,15 @@ export const PUT = async (
 
 export const DELETE = async (
   req: Request,
-  { params }: { params: { id: number } },
+  { params }: { params: { id: string } },
 ) => {
+  const recordId = Number(params.id);
+  if (Number.isNaN(recordId)) {
+    return new Response(JSON.stringify(null), {
+      status: 400,
+      statusText: "Bad request",
+    });
+  }
   const status = await getServerAuthSession();
   if (!status) {
     return new Response(JSON.stringify(null), {
@@ -114,7 +121,7 @@ export const DELETE = async (
   }
   let data = null;
   try {
-    data = await deleteRecord({ recordId: params.id, userId: status.user.id });
+    data = await deleteRecord({ recordId, userId: status.user.id });
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       return new Response(JSON.stringify(e.cause), {

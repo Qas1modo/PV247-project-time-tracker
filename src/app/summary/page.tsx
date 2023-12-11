@@ -35,7 +35,7 @@ const SummaryPage = () => {
 
   // console.log(timePerActivity);
 
-  let data = [];
+  let data: { id: number; value: number; label: string; }[] = [];
 
   categories?.forEach((category) => {
     let timeTotal = 0;

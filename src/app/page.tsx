@@ -9,7 +9,7 @@ export default async function Home() {
   const session = await getServerAuthSession();
   if (session?.user) {
     return (
-      <div className="flex-col mx-36">
+      <div className="flex-col mx-20">
         {/* <Countdown /> */}
         {/* <FilterContainer /> */}
         {/* <ActivityContainer /> */}

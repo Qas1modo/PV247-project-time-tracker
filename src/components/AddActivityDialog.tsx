@@ -104,7 +104,7 @@ export const AddActivityDialog = ({
         </div>
       </dialog>
       <button
-        className="bg-gray-800 text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5"
+        className="bg-gray-800 text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-3/5"
         onClick={openDialog}
       >
         + Add New Activity

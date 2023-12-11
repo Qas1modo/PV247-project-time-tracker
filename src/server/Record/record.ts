@@ -26,6 +26,20 @@ export const getRecordById = async (data: { id: number; userId: number }) => {
   return record;
 };
 
+export const getRecordsByActivityId = async (data: { activityId: number; userId: number }) => {
+  const records = await db.record.findMany({
+    where: {
+      deleted: false,
+      activity: {
+        id: data.activityId,
+        deleted: false,
+        userId: data.userId,
+      },
+    }
+  });
+  return records;
+};
+
 export const getUserRecords = async (data: { userId: number }) => {
   const records = await db.activity.findMany({
     where: {

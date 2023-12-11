@@ -8,6 +8,7 @@ import { Record } from "@prisma/client";
 import { Activity } from "@prisma/client";
 import AddRecordDialog from "./AddRecordDialog";
 import { record } from "zod";
+import Link from "next/link";
 
 const colors: { [key: number]: string } = {
   1: "#66c2ff",
@@ -78,12 +79,14 @@ const ActivityItem = ({
   return (
     <>
       <div
-        className="relative text-white p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-2/5"
+        className="relative text-black p-4 mb-4 mx-auto rounded-md shadow-md w-full sm:w-3/5"
         style={{ backgroundColor: colors[activity.categoryId] }}
       >
         <div className="flex">
           <div className="flex-grow">
-            <h3 className="text-xl font-semibold mb-2">{activity.name}</h3>
+            <Link href={`/activity/${activity.id}`}>
+              <h3 className="text-black text-xl font-semibold mb-2">{activity.name}</h3>
+            </Link>
             <p className="text-black">
               <strong>Category: </strong>
               {categoryName ? categoryName : "Category not found"}
@@ -101,7 +104,7 @@ const ActivityItem = ({
             ) : (
               <div className="flex">
                 <div className="flex-grow">
-                  <div className="ml-2 mr-2">
+                  <div className="ml-2 mr-2 w-16">
                     <StartStop
                       activityId={activity.id}
                       timeSpent={getTimeSpent(records)}

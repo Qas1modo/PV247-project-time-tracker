@@ -19,7 +19,8 @@ const AddRecordDialog = ({
     setIsOpen(true);
   };
 
-  const closeDialog = () => {
+  const cancelDialog = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     setIsOpen(false);
   };
 
@@ -33,7 +34,7 @@ const AddRecordDialog = ({
       {
         onSuccess: (data) => {
           onAddRecord(data);
-          closeDialog();
+          setIsOpen(false);
         },
       }
     );
@@ -51,9 +52,9 @@ const AddRecordDialog = ({
     <div>
       <button
         onClick={openDialog}
-        className="text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+        className="text-black px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
       >
-        Add record
+          Add record
       </button>
       <dialog
         id="add_record_modal"
@@ -61,16 +62,17 @@ const AddRecordDialog = ({
         open={isOpen}
       >
         <div className="modal-box">
-          <div className="p-4">
+          <div className="p-4 text-white">
             <strong>Add record for {activity.name}</strong>
           </div>
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
               <div className="flex flex-col space-y-4 p-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
+                <label className="block text-white text-sm font-bold mb-2">
                   Start Date:
                 </label>
                 <input
+                  className="text-white"
                   type="datetime-local"
                   defaultValue={new Date(new Date().getTime() - 60 * 60 * 1000)
                     .toISOString()
@@ -86,10 +88,11 @@ const AddRecordDialog = ({
                   </p>
                 )}
 
-                <label className="block text-gray-700 text-sm font-bold mb-2">
+                <label className="block text-white text-sm font-bold mb-2">
                   End Date:
                 </label>
                 <input
+                className="text-white"
                   type="datetime-local"
                   defaultValue={new Date().toISOString().slice(0, 16)}
                   {...methods.register("endDate", { required: true })}
@@ -103,7 +106,7 @@ const AddRecordDialog = ({
                   Add
                 </button>
                 <button
-                  onClick={closeDialog}
+                  onClick={cancelDialog}
                   className="text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
                 >
                   Cancel
