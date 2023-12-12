@@ -16,7 +16,7 @@ const FilterButton = ({
       id={category.id.toString()}
       type="checkbox"
       aria-label={category.name}
-      className="btn btn-outline border-4"
+      className="btn border-4 checked:bg-white hover:bg-white"
       style={{ borderColor: colors[category.id], color: colors[category.id] }}
       onClick={onClickFilter}
     />

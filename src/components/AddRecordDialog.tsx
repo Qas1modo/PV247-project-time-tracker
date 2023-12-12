@@ -52,9 +52,9 @@ const AddRecordDialog = ({
     <div>
       <button
         onClick={openDialog}
-        className="text-black px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
+        className="text-black px-4 py-2 rounded-md hover:bg-white transition duration-300"
       >
-          Add record
+        Add time manually
       </button>
       <dialog
         id="add_record_modal"
@@ -92,7 +92,7 @@ const AddRecordDialog = ({
                   End Date:
                 </label>
                 <input
-                className="text-white"
+                  className="text-white"
                   type="datetime-local"
                   defaultValue={new Date().toISOString().slice(0, 16)}
                   {...methods.register("endDate", { required: true })}
