@@ -1,6 +1,7 @@
 "use client";
 
 import { signIn, signOut, useSession } from "next-auth/react";
+import { FaSignOutAlt } from "react-icons/fa";
 
 export const LoginStatus = () => {
   const { data, status } = useSession();
@@ -19,12 +20,12 @@ export const LoginStatus = () => {
   }
   return (
     <div className="flex gap-3 items-center">
-      Hi, {data?.user.name}
+      User: <strong>{data?.user.name}</strong>
       <button
         onClick={() => signOut()}
-        className="rounded border border-white p-3"
+        className="flex items-center rounded border border-white p-3 bg-red-500 text-white hover:bg-red-600 transition duration-300"
       >
-        Sign out
+        <FaSignOutAlt className="mr-2" /> Sign out
       </button>
     </div>
   );
