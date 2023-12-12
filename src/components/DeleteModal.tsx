@@ -8,7 +8,7 @@ export const DeleteModal = ({
   handleCancelDelete: MouseEventHandler<HTMLButtonElement>;
 }) => {
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+    <div className="z-10 fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-4 rounded-md shadow-md">
         <p>Are you sure you want to delete this activity?</p>
         <div className="flex justify-end mt-4">
