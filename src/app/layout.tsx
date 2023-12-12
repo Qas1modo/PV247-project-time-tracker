@@ -5,9 +5,9 @@ import "./globals.css";
 import { Providers } from "./Providers";
 import { LoginStatus } from "../components/LoginStatus";
 import { Suspense } from "react";
-import Loading from "../components/Loading";
 import Navigation from "@/components/Navigation";
 import { getServerAuthSession } from "@/server/auth";
+import Loader from "@/components/Loader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +26,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className} style={{ height: "100vh" }}>
         <Providers>
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loader />}>
             {session?.user ? (
               <>
                 <header className="bg-black p-4 flex items-center justify-between">

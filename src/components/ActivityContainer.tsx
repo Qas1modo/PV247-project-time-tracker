@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ActivityItem from "./Activity";
 import AddActivityDialog from "./AddActivityDialog";
 import { FilterContainer } from "./FilterContainer";
@@ -8,6 +8,7 @@ import { useGetActivities } from "@/hooks/Activity/activity";
 import { type Category } from "@/types/category";
 import { Activity } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Loader from "./Loader";
 
 // interface ActivityContainerProps {
 //   activities: Activity[];
@@ -62,7 +63,7 @@ export const ActivityContainer = ({
   }, [data]);
 
   if (isLoading) {
-    return <>Loading...</>;
+    return <Loader />;
   }
 
   if (data === undefined) {

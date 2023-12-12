@@ -12,6 +12,7 @@ import { useGetCategories } from "@/hooks/Category/category";
 import { colors } from "@/utils/utils";
 import { useState } from "react";
 import { Activity } from "@prisma/client";
+import Loader from "@/components/Loader";
 
 type PieChartRecord = {
   id: number;
@@ -64,7 +65,7 @@ const SummaryPage = () => {
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategories();
   if (recordsLoading || activitiesLoading || categoriesLoading) {
-    return <>Loading...</>;
+    return <Loader />;
   }
   let totalTimeSpent = 0;
 

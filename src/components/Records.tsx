@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Record } from "@prisma/client";
 import { useDeleteActivity } from "@/hooks/Activity/activity";
 import { useRouter } from "next/navigation";
+import Loader from "./Loader";
 
 const Records = ({
   activityId,
@@ -39,7 +40,7 @@ const Records = ({
   });
   const { mutate: mutateDeleteActivity, isPending } = useDeleteActivity();
   if (status === "pending") {
-    return <div>Loading</div>;
+    return <Loader />;
   }
   const records = data ?? [];
   return (

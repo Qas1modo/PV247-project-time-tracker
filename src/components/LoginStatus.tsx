@@ -2,10 +2,11 @@
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import { FaSignOutAlt } from "react-icons/fa";
+import Loader from "./Loader";
 
 export const LoginStatus = () => {
   const { data, status } = useSession();
-  if (status === "loading") return <div>loading...</div>;
+  if (status === "loading") return <Loader />;
   if (status === "unauthenticated") {
     return (
       <div>

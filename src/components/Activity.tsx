@@ -11,6 +11,7 @@ import Link from "next/link";
 import { colors } from "@/utils/utils";
 import { UseMutationResult } from "@tanstack/react-query";
 import { DeleteModal } from "./DeleteModal";
+import Loader from "./Loader";
 
 const getTimeSpent = (records: Record[]) => {
   if (records === undefined) {
@@ -106,7 +107,7 @@ const ActivityItem = ({
               />
             </div>
             {recordsLoading ? (
-              <>Loading time...</>
+              <Loader />
             ) : (
               <div className="flex">
                 <div className="flex-grow">
