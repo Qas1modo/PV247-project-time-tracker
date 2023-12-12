@@ -1,6 +1,11 @@
 import Records from '@/components/Records';
 import { getActivityById } from '@/server/Activity/activity';
 import { getServerAuthSession } from '@/server/auth';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Activity',
+}
 
 const ActvityPage = async ({ params }: { params: { id: string } }) => {
     const status = await getServerAuthSession();
