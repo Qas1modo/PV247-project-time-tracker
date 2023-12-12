@@ -42,7 +42,6 @@ const ActivityItem = ({
   removeActivity: UseMutationResult<Response, Error, number, unknown>;
 }) => {
   const [records, setRecords] = useState<Record[]>([]);
-  const [isDeleteModalVisible, setDeleteModalVisibility] = useState(false);
   const { data, isLoading: recordsLoading } = useListRecords();
   useEffect(() => {
     const filteredRecords = data?.find(
@@ -68,17 +67,8 @@ const ActivityItem = ({
     });
   };
 
-  const handleDeleteClick = () => {
-    setDeleteModalVisibility(true);
-  };
-
   const handleConfirmDelete = () => {
     removeActivity.mutate(activity.id);
-    setDeleteModalVisibility(false);
-  };
-
-  const handleCancelDelete = () => {
-    setDeleteModalVisibility(false);
   };
 
   return (
@@ -126,20 +116,10 @@ const ActivityItem = ({
             )}
           </div>
         </div>
-        <button
-          onClick={handleDeleteClick}
-          className="p-2 text-red-500 hover:text-red-700 hover:bg-white rounded-md cursor-pointer transition duration-300"
-        >
-          Delete Activity 🗑️
-        </button>
 
         {/* Deletion Modal */}
-        {isDeleteModalVisible && (
-          <DeleteModal
-            handleConfirmDelete={handleConfirmDelete}
-            handleCancelDelete={handleCancelDelete}
-          />
-        )}
+
+        <DeleteModal handleConfirmDelete={handleConfirmDelete} />
       </div>
     </>
   );
