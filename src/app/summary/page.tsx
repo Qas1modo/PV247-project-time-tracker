@@ -118,23 +118,30 @@ const SummaryPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <PieChartComponent data={data} handleClick={handleClick} />
-      <div className="mt-10"></div>
-      {selectedCategory ? (
-        <PieChartComponent
-          data={timePerActivityPerCategory[selectedCategory].map(
-            (item: { activity: Activity; timeSpent: number }) => ({
-              id: item.activity.id,
-              value: item.timeSpent,
-              label: item.activity.name,
-            })
-          )}
-        />
+    <div className="flex flex-col items-center justify-center pt-10">
+      {totalTimeSpent === 0 ? (
+        <>😢 No time spent on activities, yet...</>
       ) : (
-        <p className="font-xs text-slate-500 ">
-          Click on the chart above to see details
-        </p>
+        <>
+          <PieChartComponent data={data} handleClick={handleClick} />
+          <div className="mt-10"></div>
+
+          {selectedCategory ? (
+            <PieChartComponent
+              data={timePerActivityPerCategory[selectedCategory].map(
+                (item: { activity: Activity; timeSpent: number }) => ({
+                  id: item.activity.id,
+                  value: item.timeSpent,
+                  label: item.activity.name,
+                })
+              )}
+            />
+          ) : (
+            <p className="font-xs text-slate-500 ">
+              Click on the chart above to see details
+            </p>
+          )}
+        </>
       )}
     </div>
   );
