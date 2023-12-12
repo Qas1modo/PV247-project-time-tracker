@@ -5,6 +5,7 @@ import { Record } from "@prisma/client";
 import { useDeleteActivity } from "@/hooks/Activity/activity";
 import { useRouter } from "next/navigation";
 import Loader from "./Loader";
+import { DeleteModal } from "./DeleteModal";
 
 const Records = ({
   activityId,
@@ -38,6 +39,14 @@ const Records = ({
       alert(`Error during deletion: ${error}`);
     },
   });
+
+  const handleDelete = () => {
+    mutateDeleteActivity(activityId, {
+      onSuccess: () => {
+        router.replace("/");
+      },
+    });
+  };
   const { mutate: mutateDeleteActivity, isPending } = useDeleteActivity();
   if (status === "pending") {
     return <Loader />;
@@ -47,18 +56,10 @@ const Records = ({
     <div className="p-8">
       <div className="font-bold mb-2 text-xl">
         Activity name: {activityName}
-        <button
-          onClick={() =>
-            mutateDeleteActivity(activityId, {
-              onSuccess: () => {
-                router.replace("/");
-              },
-            })
-          }
-          className="ml-10 rounded-md font-normal text-sm p-2 bg-red-500 text-white hover:text-red-700 hover:bg-white cursor-pointer"
-        >
-          Delete Activity 🗑️
-        </button>
+        <DeleteModal
+          handleConfirmDelete={handleDelete}
+          buttonDesign="ml-10 rounded-md font-normal text-sm p-2 bg-red-500 text-white hover:text-red-700 hover:bg-white cursor-pointer"
+        />
       </div>
       <ul className="flex flex-col">
         {records.length === 0 ? (
