@@ -24,7 +24,7 @@ export default async function RootLayout({
   const session = await getServerAuthSession();
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} style={{ height: "100vh" }}>
         <Providers>
           <Suspense fallback={<Loading />}>
             {session?.user ? (
