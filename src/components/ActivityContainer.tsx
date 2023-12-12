@@ -33,23 +33,25 @@ export const ActivityContainer = ({
 
   const removeActivity = useMutation({
     mutationFn: async (activityId: number) => {
-        return await fetch(`/api/activity/${activityId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+      return await fetch(`/api/activity/${activityId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     },
     onSuccess: async (data) => {
-        let id = Number(await data.json());
-        console.log(id);
-        if (!Number.isNaN(id)) {
-          setActivities((prevActivities) => prevActivities.filter(a => a.id != id));
-        }
-        queryClient.refetchQueries();
+      let id = Number(await data.json());
+      console.log(id);
+      if (!Number.isNaN(id)) {
+        setActivities((prevActivities) =>
+          prevActivities.filter((a) => a.id != id)
+        );
+      }
+      queryClient.refetchQueries();
     },
     onError: (error) => {
-        alert(`Error during deletion: ${error}`);
+      alert(`Error during deletion: ${error}`);
     },
   });
 
@@ -95,13 +97,13 @@ export const ActivityContainer = ({
 
   return (
     <>
-      <div className="flex gap-2 p-4 justify-center flex-wrap">
+      <div className="flex gap-2 p-4 justify-center flex-wrap bg-black">
         <FilterContainer
           categories={categories}
           onClickFilter={onClickFilter}
         />
       </div>
-      <div className="flex flex-col flex-wrap justify-start w-full">
+      <div className="flex flex-col flex-wrap justify-start w-full bg-black">
         <AddActivityDialog
           categories={categories}
           onAddActivity={handleAddActivity}

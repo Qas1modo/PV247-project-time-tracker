@@ -29,3 +29,17 @@ const getAllActivitiesByCategory = async (data: { categoryId: number }) => {
 };
 export const useGetAllActivitiesByCategory = () =>
   useMutation({ mutationFn: getAllActivitiesByCategory });
+
+const deleteActivity = async (activityId: number) => {
+  const response = await fetch(`/api/activity/${activityId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const json = await response.json();
+  return json;
+};
+
+export const useDeleteActivity = () =>
+  useMutation({ mutationFn: deleteActivity });
