@@ -5,8 +5,10 @@ import { set } from "zod";
 
 export const DeleteModal = ({
   handleConfirmDelete,
+  buttonDesign,
 }: {
   handleConfirmDelete: MouseEventHandler<HTMLButtonElement>;
+  buttonDesign?: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,7 +30,11 @@ export const DeleteModal = ({
     <>
       <button
         onClick={handleDeleteClick}
-        className="p-2 text-red-500 hover:text-red-700 hover:bg-white rounded-md cursor-pointer transition duration-300"
+        className={
+          buttonDesign
+            ? buttonDesign
+            : "p-2 text-red-800 hover:text-red-700 hover:bg-white rounded-md cursor-pointer transition duration-300"
+        }
       >
         Delete Activity 🗑️
       </button>
@@ -37,9 +43,11 @@ export const DeleteModal = ({
         className="modal modal-bottom sm:modal-middle"
         open={isOpen}
       >
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="fixed font-normal text-base top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-4 rounded-md shadow-md">
-            <p>Are you sure you want to delete this activity?</p>
+            <p className="text-black">
+              Are you sure you want to delete this activity?
+            </p>
             <div className="flex justify-end mt-4">
               <button
                 onClick={handleConfirm}
