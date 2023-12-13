@@ -16,6 +16,8 @@ const Records = ({
 }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { mutate: mutateDeleteActivity } = useDeleteActivity();
+
   const { data, status } = useQuery({
     queryKey: ["activityRecord"],
     queryFn: async () => {
@@ -23,6 +25,7 @@ const Records = ({
       return (await response.json()) as Record[];
     },
   });
+
   const removeRecord = useMutation({
     mutationFn: async (recordId: number) => {
       return await fetch(`/api/record/${recordId}`, {
@@ -47,11 +50,13 @@ const Records = ({
       },
     });
   };
-  const { mutate: mutateDeleteActivity, isPending } = useDeleteActivity();
+
   if (status === "pending") {
     return <Loader />;
   }
+
   const records = data ?? [];
+
   return (
     <div className="p-8">
       <div className="font-bold mb-2 text-xl">
