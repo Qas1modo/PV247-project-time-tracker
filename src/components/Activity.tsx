@@ -39,10 +39,11 @@ const ActivityItem = ({
 }: {
   activity: Activity;
   categoryName: string | undefined;
-  removeActivity: UseMutationResult<Response, Error, number, unknown>;
+  removeActivity: (activityId: number) => void;
 }) => {
   const [records, setRecords] = useState<Record[]>([]);
   const { data, isLoading: recordsLoading } = useListRecords();
+
   useEffect(() => {
     const filteredRecords = data?.find(
       (activityRecord) => activityRecord.id === activity.id
@@ -68,7 +69,7 @@ const ActivityItem = ({
   };
 
   const handleConfirmDelete = () => {
-    removeActivity.mutate(activity.id);
+    removeActivity(activity.id);
   };
 
   return (

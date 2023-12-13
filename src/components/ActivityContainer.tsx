@@ -4,23 +4,11 @@ import React, { useEffect, useState } from "react";
 import ActivityItem from "./Activity";
 import AddActivityDialog from "./AddActivityDialog";
 import { FilterContainer } from "./FilterContainer";
-import { useGetActivities } from "@/hooks/Activity/activity";
+import { useDeleteActivity, useGetActivities } from "@/hooks/Activity/activity";
 import { type Category } from "@/types/category";
 import { Activity } from "@prisma/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import Loader from "./Loader";
-
-// interface ActivityContainerProps {
-//   activities: Activity[];
-// }
-
-// interface Activity {
-//   id: number;
-//   name: string;
-//   category: string;
-//   startTime: string;
-//   endTime: string;
-// }
 
 export const ActivityContainer = ({
   categories,
@@ -30,31 +18,17 @@ export const ActivityContainer = ({
   const [activeFilters, setActiveFilters] = useState<number[]>([]);
   const [activities, setActivities] = useState<Activity[]>([]);
   const { data, isLoading } = useGetActivities();
-  const queryClient = useQueryClient();
+  const { mutate: mutateDeleteActivity } = useDeleteActivity();
 
-  const removeActivity = useMutation({
-    mutationFn: async (activityId: number) => {
-      return await fetch(`/api/activity/${activityId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    },
-    onSuccess: async (data) => {
-      let id = Number(await data.json());
-      console.log(id);
-      if (!Number.isNaN(id)) {
+  const handleDeleteActivity = (activityId: number) => {
+    mutateDeleteActivity(activityId, {
+      onSuccess: () => {
         setActivities((prevActivities) =>
-          prevActivities.filter((a) => a.id != id)
+          prevActivities.filter((a) => a.id != activityId)
         );
-      }
-      queryClient.refetchQueries();
-    },
-    onError: (error) => {
-      alert(`Error during deletion: ${error}`);
-    },
-  });
+      },
+    });
+  };
 
   useEffect(() => {
     if (data !== undefined) {
@@ -113,7 +87,7 @@ export const ActivityContainer = ({
           <ActivityItem
             key={activity.id}
             activity={activity}
-            removeActivity={removeActivity}
+            removeActivity={handleDeleteActivity}
             categoryName={
               categories.find((category) => category.id === activity.categoryId)
                 ?.name
