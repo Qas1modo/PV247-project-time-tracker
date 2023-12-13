@@ -82,6 +82,9 @@ export const AddActivityDialog = ({
                   {...methods.register("name")}
                   placeholder="Enter activity name"
                 />
+                {methods.formState.errors.name && (
+                  <RequiredMsg msg={methods.formState.errors.name.message} />
+                )}
               </div>
               <div className="mb-4">
                 <ClientSideCategoryField categories={categories} />
