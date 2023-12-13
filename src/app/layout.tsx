@@ -12,7 +12,10 @@ import Loader from "@/components/Loader";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Activity time tracker",
+  title: {
+    template: '%s | Activity time tracker',
+    default: 'Activity time tracker'
+  },
   description: "Track your activities",
 };
 
